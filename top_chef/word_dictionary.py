@@ -8,7 +8,6 @@ class WordDictionary:
 
     def load_words(self, word_path):
         # Complete this function
-        print("algo2")
         pass
 
     def add_word(self, word, value):
