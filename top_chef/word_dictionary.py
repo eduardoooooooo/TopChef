@@ -17,6 +17,7 @@ class WordDictionary:
         return word in self.words
 
     def get_value(self, word):
+        print("asdkj")
         return self.words[word]
 
     def get_words(self):
