@@ -46,16 +46,43 @@ class Chefs:
         return False
 
     def get_ids(self):
+        """
+        Devuelve los ids de los chefs que hay
+
+        :return ids: (list) Ids de los chefs
+        """
         # Complete this function
-        return None
+        ids = []
+
+        return ids
 
     def add_chef(self, name, restaurant):
+        """
+        Crea y añade al diccionario la clase "Chef"que contiene el nombre del Chef y el restaurante en el que trabaja
+        Lo añade también a "self.sorted_chefs" y lo ordena.
+        
+        :param name:        (String)    Nombre del chef
+        :param restaurant:  (String)    Restaurante en el que trabaja
+        """
         # Complete this function
+        self.next += 1
+        chef = Chef(self.next, name, restaurant)
+        self.chefs[self.next] = chef
+        self.sorted_chefs.append(chef)
+        if not self.is_sorted():
+            self.sort_chefs()
         return None
 
     def get_chef(self, id):
+        """
+        Devuelve el objeto/clase "Chef"
+
+        :param id:      (Integer)   Id del chef
+        :return chef:   (Object)    Clase "Chef"
+        """
         # Complete this function
-        return None
+        chef = self.chefs.get(id)
+        return chef
 
     def is_sorted(self):
         # Complete this function
@@ -119,7 +146,19 @@ class Recipes:
         self.sorted_recipes = []
 
     def add_recipe(self, chef_id, name):
+        """
+        Crea y añade al diccionario la clase "Recipe"que contiene la reseña con el id del chef
+        Lo añade también a "self.sorted_recipes" y lo ordena.
+        
+        :param chef_id: (Integer)   Id del chef
+        :param name:    (String)    Nombre de la receta 
+        """
         # Complete this function
+        self.next_recipe += 1
+        recipe = Recipe(self.next_recipe, name, chef_id)
+        self.recipes[self.next_recipe] = recipe
+        self.sorted_recipes.append(recipe)
+        self.sort_recipes()
         return None
 
     def get_ids(self):
@@ -193,7 +232,19 @@ class Reviews:
         self.sorted_reviews = []
 
     def add_review(self, rec_id, review):
+        """
+        Crea y añade al diccionario la clase "Review"que contiene la reseña con el id de la receta
+        Lo añade también a "self.sorted_reviews" y lo ordena.
+
+        :param rec_id: (Integer)    Id de la receta
+        :param review: (String)     Reseña 
+        """
         # Complete this function
+        self.next_review += 1
+        review = Review(self.next_review, review, rec_id)
+        self.reviews[self.next_review] = review
+        self.sorted_reviews.append(review)
+        self.sort_reviews()
         return None
 
     def get_ids(self):
@@ -243,22 +294,85 @@ class TopChef:
 
     def load_data(self, path):
         # Complete this function
-        pass
+        """
+        Lee el "path" dado con la estructura predeterminada y crea los chef con sus platos y
+        reviews correspondientes, raise TopChefException en caso de que no tenga el formato
+        deseado y reiniciamos la database para que no contenga información ya cargada.
+
+        :param path: (Object) Fichero que contiene los datos
+        """
+        CHEF_CHAR = "CHEF"
+        COURSE_CHAR = "COURSE"
+        TAB = "\t"
+
+        with open(path) as f:
+            line = f.readline()
+            while line != "":
+                if (CHEF_CHAR or TAB) not in line:
+                    raise TopChefException('Wrong file')
+                # siempre tendra "CHEF ..." y lo convierte en una lista
+                chef_line_list = line.split(TAB)
+                try:
+                    header, name, restaurant = chef_line_list
+                    self.add_chef(name, restaurant)
+                except ValueError:
+                    self.clear()
+                    raise TopChefException('Wrong TopChef Data File')
+                # siguiente linea
+                line = f.readline()
+
+                while (CHEF_CHAR not in line) and (COURSE_CHAR in line) and line != "":
+                    # siempre empezará "COURSE ..."
+                    course_line_list = line.split(TAB)
+                    header, recipe_name = course_line_list
+                    self.add_recipe(self.chefs.next, recipe_name) 
+
+                    line = f.readline()   
+                    while (CHEF_CHAR not in line) and (COURSE_CHAR not in line) and line != "":
+                        self.add_review(self.recipes.next_recipe, line)
+                        line = f.readline()
 
     def clear(self):
         # Complete this function
-        pass
+        """
+        Reinicia toda la database en caso de que hubiera una carga de la base de datos erronea para
+        que no contenga la información ya añadida.
+        """
+        self.__init__()
 
     def add_chef(self, name, rest):
+        """
+        Llama al método add_chef de la clase self.chefs para añadir un nuevo chef a la clase.
+        
+        :param name: (String) Nombre del chef
+        :param rest: (String) Restaurante del chef
+        """
         # Complete this function
+        self.chefs.add_chef(name, rest)
         return None
 
     def add_recipe(self, id_chef, name):
+        """
+        Llama al método add_recipe de la clase self.recipes para añadir una nueva receta con la
+        id del chef.
+
+        :param id_chef: (Integer)   El id del chef
+        :param name:    (String)    Nombre de la receta:
+        """
         # Complete this function
+        self.recipes.add_recipe(id_chef,name)
         return None
 
     def add_review(self, id_rev,review):
+        """
+        Llama al método add_review de la clase self.reviews para añadir una nueva reseña con el
+        id de la receta.
+        
+        :param id_rev: (Integer)    id de la receta
+        :param review: (String)     la reseña 
+        """
         # Complete this function
+        self.reviews.add_review(id_rev, review)
         return None
 
     def compute_scores(self, word_dict):

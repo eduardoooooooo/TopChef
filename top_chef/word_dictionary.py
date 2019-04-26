@@ -7,8 +7,24 @@ class WordDictionary:
         self.words = {}
 
     def load_words(self, word_path):
+        """
+        Lee la primera linea para ver si es el fichero deseado, sino raise WordDictionaryException.
+        Después lee las demás lineas y llama a la función add_word()
+
+        :param word_path: (Objeto)  Fichero que se desea realizar la operación
+        """
         # Complete this function
-        pass
+        WORD = "WORD"
+        VALUE = "VALUE"
+        
+        with open(word_path,'r') as f:
+            line = f.readline()
+            if (WORD and VALUE) not in line:
+                raise WordDictionaryException('Wrong path')
+            for line in f:
+                lista = line.split()
+                word, value = lista
+                self.add_word(word, float(value))
 
     def add_word(self, word, value):
         self.words[word] = value
