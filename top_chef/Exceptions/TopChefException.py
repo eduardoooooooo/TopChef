@@ -1,0 +1,2 @@
+class TopChefException(Exception):
+    pass

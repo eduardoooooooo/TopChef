@@ -1,6 +1,7 @@
 import os
-from top_chef.adt import TopChef
-from top_chef.word_dictionary import WordDictionary
+
+from TopChef.top_chef.controllers.TopChef import TopChef
+from TopChef.top_chef.controllers.word_dictionary import WordDictionary
 
 
 def read_int_option(message: str, start: int, end: int) -> int:
