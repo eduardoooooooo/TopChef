@@ -1,4 +1,7 @@
 # Structure to hold the reviews
+from TopChef.top_chef.models.Review import Review
+
+
 class Reviews:
     def __init__(self):
         self.reviews = {}
@@ -6,12 +9,15 @@ class Reviews:
         self.sorted_reviews = []
 
     def add_review(self, rec_id, review):
-        # Complete this function
-        return None
+
+        new_review = Review(self.next_review, review, rec_id)
+        self.reviews[new_review.get_id] = new_review
+        self.next_review += 1
+        return new_review
 
     def get_ids(self):
         # Complete this function
-        return None
+        return list(self.reviews.keys())
 
     def exists(self, id):
         # Complete this function

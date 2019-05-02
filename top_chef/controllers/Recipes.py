@@ -1,4 +1,7 @@
 # Structure to hold the recipes
+from TopChef.top_chef.models.Recipe import Recipe
+
+
 class Recipes:
     def __init__(self):
         self.recipes = {}
@@ -6,8 +9,10 @@ class Recipes:
         self.sorted_recipes = []
 
     def add_recipe(self, chef_id, name):
-        # Complete this function
-        return None
+        new_recipe = Recipe(self.next_recipe, name, chef_id)
+        self.recipes[new_recipe.get_id()] = new_recipe
+        self.next_recipe += 1
+        return new_recipe
 
     def get_ids(self):
         # Complete this function

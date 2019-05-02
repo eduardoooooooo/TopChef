@@ -1,6 +1,9 @@
 from TopChef.top_chef.controllers.Chefs import Chefs
 from TopChef.top_chef.controllers.Recipes import Recipes
 from TopChef.top_chef.controllers.Reviews import Reviews
+from TopChef.top_chef.models.Chef import Chef
+from TopChef.top_chef.models.Recipe import Recipe
+from TopChef.top_chef.models.Review import Review
 
 
 class TopChef:
@@ -12,23 +15,46 @@ class TopChef:
 
     def load_data(self, path):
         # Complete this function
-        pass
+        top_chef = open(path,"r")
+        top_chef_line = top_chef.readline().split("\t")
+        while top_chef_line[0]!="":
+            self.process_line(top_chef_line)
+            top_chef_line = top_chef.readline().split("\t")
+
+
+
+    def process_line(self,data):
+        """
+        Devuelve el objeto correspondiente dependiendo de la primera palabra de la linea
+        :param data: Array donde cada componente se consigue haciendo un split usando como referencia el tabulador de una linea
+        :return: Un objeto dependiendo de la primera palabra del array (Chef,Recipe,Review)
+        """
+        if data[0] == "CHEF":
+            new_chef = self.add_chef(data[1],data[2].replace("\n",""))
+            return new_chef
+        elif data[0] == "COURSE":
+            id_last_chef = self.chefs.next - 1
+            new_recipe = self.add_recipe(id_last_chef,data[1].replace("\n",""))
+            return new_recipe
+        else:
+            id_last_recipe = self.recipes.next_recipe - 1
+            new_review = self.add_review(id_last_recipe,data[0].replace("\n",""))
+            return new_review
 
     def clear(self):
         # Complete this function
         pass
 
     def add_chef(self, name, rest):
-        # Complete this function
-        return None
+        return self.chefs.add_chef(name,rest)
+
 
     def add_recipe(self, id_chef, name):
-        # Complete this function
-        return None
+        return self.recipes.add_recipe(id_chef,name)
 
-    def add_review(self, id_rev,review):
-        # Complete this function
-        return None
+    #id_rev --> id_rec debido a que se pasa el id de la recete no el del id
+    def add_review(self, id_rec, review):
+        return self.reviews.add_review(id_rec,review)
 
     def compute_scores(self, word_dict):
         self.compute_reviews_score(word_dict)

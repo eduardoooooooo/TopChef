@@ -1,4 +1,7 @@
 # Structure to hold all chefs
+from TopChef.top_chef.models.Chef import Chef
+
+
 class Chefs:
     def __init__(self):
         self.chefs = {}
@@ -14,8 +17,10 @@ class Chefs:
         return None
 
     def add_chef(self, name, restaurant):
-        # Complete this function
-        return None
+        new_chef = Chef(self.next, name, restaurant)
+        self.chefs[new_chef.get_id()] = new_chef
+        self.next += 1
+        return new_chef
 
     def get_chef(self, id):
         # Complete this function

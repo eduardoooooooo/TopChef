@@ -1,6 +1,7 @@
 import os
 
 from TopChef.top_chef.controllers.TopChef import TopChef
+
 from TopChef.top_chef.controllers.word_dictionary import WordDictionary
 
 
