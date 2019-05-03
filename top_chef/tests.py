@@ -6,3 +6,7 @@ if __name__ == '__main__':
     topchef.load_data("../data/topchef_data.txt")
     word_dictionary = WordDictionary()
     word_dictionary.load_words("../data/words.txt")
+    topchef.compute_reviews_score(word_dictionary)
+
+
+

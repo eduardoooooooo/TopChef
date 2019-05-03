@@ -1,9 +1,11 @@
 from TopChef.top_chef.controllers.Chefs import Chefs
+from TopChef.top_chef.controllers.FormatWordScore import FormatWordScore
 from TopChef.top_chef.controllers.Recipes import Recipes
 from TopChef.top_chef.controllers.Reviews import Reviews
 from TopChef.top_chef.models.Chef import Chef
 from TopChef.top_chef.models.Recipe import Recipe
 from TopChef.top_chef.models.Review import Review
+import re
 
 
 class TopChef:
@@ -65,9 +67,29 @@ class TopChef:
         # Complete this function
 
         for rev_id in self.reviews.get_ids():
-            continue
+            score = self.process_review(rev_id,word_dict)
+            review = self.reviews.get_review(rev_id)
+            review.set_score(score)
 
         self.normalize_reviews_scores()
+
+    def process_review(self,rev_id,word_dict):
+        """
+        Processa cada review y le da una puntuacion por cada palabra que coincida en le diccionario
+        :param rev_id:
+        :param word_dict:
+        :return:
+        """
+        review = self.reviews.get_review(rev_id)
+        review_text = review.get_review()
+        format = FormatWordScore(review_text)
+        review_array_formated = format.format_string_score()
+
+        score=0
+        for word in review_array_formated:
+            if word in word_dict.get_words():
+                score+= float(word_dict.get_value(word))
+        return score
 
     def normalize_reviews_scores(self):
         # Complete this function
@@ -78,6 +100,7 @@ class TopChef:
         for rev_id in self.reviews.get_ids():
             continue
         self.normalize_recipes_scores()
+
 
     def normalize_recipes_scores(self):
         # Complete this function
@@ -120,3 +143,4 @@ class TopChef:
     def show_reviews(self, reviews):
         # Complete this function
         pass
+

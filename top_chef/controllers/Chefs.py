@@ -14,7 +14,7 @@ class Chefs:
 
     def get_ids(self):
         # Complete this function
-        return None
+        return list(self.chefs.keys())
 
     def add_chef(self, name, restaurant):
         new_chef = Chef(self.next, name, restaurant)

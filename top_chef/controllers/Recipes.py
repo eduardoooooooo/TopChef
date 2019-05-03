@@ -16,7 +16,7 @@ class Recipes:
 
     def get_ids(self):
         # Complete this function
-        return None
+        return list(self.recipes.keys())
 
     def exists(self, id):
         # Complete this function

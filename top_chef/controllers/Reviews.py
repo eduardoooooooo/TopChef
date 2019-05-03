@@ -9,9 +9,9 @@ class Reviews:
         self.sorted_reviews = []
 
     def add_review(self, rec_id, review):
-
         new_review = Review(self.next_review, review, rec_id)
-        self.reviews[new_review.get_id] = new_review
+
+        self.reviews[new_review.get_id()] = new_review
         self.next_review += 1
         return new_review
 
@@ -25,7 +25,7 @@ class Reviews:
 
     def get_review(self,rev_id):
         # Complete this function
-        return None
+        return self.reviews[rev_id]
 
     def min_score(self):
         # Complete this function
