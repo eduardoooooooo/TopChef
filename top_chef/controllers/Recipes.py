@@ -24,7 +24,7 @@ class Recipes:
 
     def get_recipe(self, recipe_id):
         # Complete this function
-        return None
+        return self.recipes[recipe_id]
 
     def is_sorted(self):
         # Complete this function

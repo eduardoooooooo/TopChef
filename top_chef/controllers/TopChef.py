@@ -65,13 +65,18 @@ class TopChef:
 
     def compute_reviews_score(self, word_dict):
         # Complete this function
-
+        min_raw_score=0
+        max_raw_score=0
         for rev_id in self.reviews.get_ids():
-            score = self.process_review(rev_id,word_dict)
+            sum_score_value = self.process_review(rev_id,word_dict)
             review = self.reviews.get_review(rev_id)
-            review.set_score(score)
+            review.set_score(sum_score_value)
+            if min_raw_score>review.get_score():
+                min_raw_score=review.get_score()
+            if max_raw_score< review.get_score():
+                max_raw_score = review.get_score()
+        self.normalize_reviews_scores(min_raw_score, max_raw_score)
 
-        self.normalize_reviews_scores()
 
     def process_review(self,rev_id,word_dict):
         """
@@ -91,15 +96,36 @@ class TopChef:
                 score+= float(word_dict.get_value(word))
         return score
 
-    def normalize_reviews_scores(self):
-        # Complete this function
-        pass
+    def normalize_reviews_scores(self, min_raw_score, max_raw_score):
+        """
+        Normaliza la puntuacion de todas las reviews.
+        :param min_raw_score:
+        :param max_raw_score:
+        :return:
+        """
+        for rev_id in self.reviews.get_ids():
+            self.normalize_review_score(rev_id,min_raw_score, max_raw_score)
+
+    def normalize_review_score(self, rev_id, min_raw_score, max_raw_score):
+        """
+        Normaliza la puntuacion de una review
+        :param rev_id:
+        :param min_raw_score:
+        :param max_raw_score:
+        :return:
+        """
+        review = self.reviews.get_review(rev_id)
+        rs_mRS = review.get_score() - min_raw_score
+        mRS_mRS = max_raw_score - min_raw_score
+        normScore = round(rs_mRS / mRS_mRS,1)
+        review.set_score(normScore)
 
     def compute_recipes_score(self):
         # Complete this function
         for rev_id in self.reviews.get_ids():
-            continue
+            pass
         self.normalize_recipes_scores()
+
 
 
     def normalize_recipes_scores(self):

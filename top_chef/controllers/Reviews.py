@@ -9,10 +9,11 @@ class Reviews:
         self.sorted_reviews = []
 
     def add_review(self, rec_id, review):
-        new_review = Review(self.next_review, review, rec_id)
-
-        self.reviews[new_review.get_id()] = new_review
         self.next_review += 1
+        new_review = Review(self.next_review, review, rec_id)
+        self.reviews[new_review.get_id()] = new_review
+        self.sorted_reviews.append(new_review)
+
         return new_review
 
     def get_ids(self):
@@ -36,12 +37,42 @@ class Reviews:
         return None
 
     def is_sorted(self):
-        # Complete this function
+        """
+        Comprueba que el array está ordenado.
+        :return: True si esta ordenado y Falso en caso contrario.
+
+        if len(self.sorted_reviews)>1:
+            for i in range(len(self.sorted_reviews)-1):
+                if self.sorted_reviews[i].get_score()> self.sorted_reviews[i+1].get_score():
+                    return False
+                if self.sorted_reviews[i].get_score() == self.sorted_reviews[i + 1].get_score():
+                    if self.sorted_reviews[i].get_id() > self.sorted_reviews[i + 1].get_id():
+                        return False
+            return True
+        return True
+        """
         return False
 
     def sort_reviews(self):
-        # Complete this function
-        pass
+        """
+        Ordena el array self.sorted_reviews
+        :return:
+        """
+        if self.is_sorted():
+            return
+        else:
+            # for every element in our array
+            for index in range(1, len(self.sorted_reviews)):
+                current = self.sorted_reviews[index]
+                position = index
+
+                while position > 0 and self.sorted_reviews[position - 1].get_score() < current.get_score():
+                    self.sorted_reviews[position] = self.sorted_reviews[position - 1]
+                    position -= 1
+
+                self.sorted_reviews[position] = current
+
+            return self.sorted_reviews
 
     def get_top_n(self, n=1):
         # Complete this function
