@@ -83,6 +83,19 @@ class Chefs:
         # Complete this function
         chef = self.chefs.get(id)
         return chef
+    def max_score(self):
+        max_score = self.sorted_chefs[0].get_score()
+        for chef in self.sorted_chefs:
+            if chef.get_score() < max_score:
+                max_score = chef.get_score()
+        return max_score
+
+    def min_score(self):
+        min_score = self.sorted_chefs[0].get_score()
+        for chef in self.sorted_chefs:
+            if chef.get_score() < min_score:
+                min_score = chef.get_score()
+        return min_score
 
     def is_sorted(self):
         """
@@ -227,6 +240,21 @@ class Recipes:
         # Complete this function
         return self.recipes.get(recipe_id)
 
+    def max_score(self):
+        max_score = self.sorted_recipes[0].get_score()
+        for recipe in self.sorted_recipes:
+            if recipe.get_score() < max_score:
+                max_score = recipe.get_score()
+        return max_score
+
+    def min_score(self):
+        min_score = self.sorted_recipes[0].get_score()
+        for recipe in self.sorted_recipes:
+            if recipe.get_score() < min_score:
+                min_score = recipe.get_score()
+
+        return min_score
+
     def is_sorted(self):
         """
         Comprueba si el atributo "self.sorted_recipes" esta ordenado
@@ -276,7 +304,7 @@ class Recipes:
     def __str__(self):
         # Complete this function
         rec_str = "######\tRecipes\t######\n"
-        for rec in self.sort_recipes:
+        for rec in self.sorted_recipes:
             rec_str += str(rec)
             rec_str += "\n"
 
@@ -369,7 +397,12 @@ class Reviews:
         :return: (Float)    El score del ultimo review que es el minimo
         """
         # Complete this function
-        return self.sorted_reviews[-1].score
+        min_score = self.sorted_reviews[0].get_score()
+        for review in self.sorted_reviews:
+            if review.get_score() < min_score:
+                min_score = review.get_score()
+
+        return min_score
 
     def max_score(self):
         """
@@ -378,7 +411,11 @@ class Reviews:
         :return: (Float)    El score del primer review que es el maximo
         """
         # Complete this function
-        return self.sorted_reviews[0].score
+        max_score = self.sorted_reviews[0].get_score()
+        for review in self.sorted_reviews:
+            if review.get_score() > max_score:
+                max_score = review.get_score()
+        return max_score
 
     def is_sorted(self):
         """
@@ -461,7 +498,7 @@ class TopChef:
         TAB = "\t"
 
         # reiniciamos la clase por si habia datos anteriores
-        self.clean()
+        self.clear()
 
         with open(path) as f:
             line = f.readline()
@@ -573,13 +610,15 @@ class TopChef:
         """
         # Complete this function
         max_score = self.reviews.max_score()
+        print("max_score" ,max_score)
         min_score = self.reviews.min_score()
+        print("min_score", min_score)
         id_list = self.reviews.get_ids()
         for id in id_list:
             review = self.reviews.get_review(id)
             raw_score = review.get_score()
             norm_score = (raw_score-min_score)/(max_score-min_score)
-            review.score = norm_score
+            review.set_score(round(norm_score,1))
 
     def compute_recipes_score(self):
         """
@@ -613,15 +652,15 @@ class TopChef:
         Normaliza los scores de las recetas
         """
         # Complete this function
-        max_score = self.recipes.get_top_n(-1)[0].get_score()
-        min_score = self.recipes.get_top_n(1)[0].get_score()
+        max_score = self.recipes.max_score()
+        min_score = self.recipes.min_score()
         id_list = self.recipes.get_ids()
         for id in id_list:
             recipe = self.recipes.get_recipe(id)
             raw_score = recipe.get_score()
             try:
                 norm_score = (raw_score-min_score)/(max_score-min_score)
-                recipe.score = norm_score
+                recipe.set_score(round(norm_score,1))
             except ZeroDivisionError:
                 continue
 
@@ -649,8 +688,8 @@ class TopChef:
 
     def normalize_chefs_scores(self):
         # Complete this function
-        max_score = self.chefs.get_top_n(-1)[0].get_score()
-        min_score = self.chefs.get_top_n(1)[0].get_score()
+        max_score = self.chefs.max_score()
+        min_score = self.chefs.min_score()
         id_list = self.chefs.get_ids()
         for id in id_list:
             chef = self.chefs.get_chef(id)
@@ -680,28 +719,19 @@ class TopChef:
 
     def show_chefs(self, chefs):
         # Complete this function
-        if 0 > chefs > len(self.chefs):
-            for chef in chefs:
-                print()
-                print(str(chef))
-        else:
-            raise TopChefException("Chefs index out of range")
+        for chef in chefs:
+            print()
+            print(str(chef))
 
     def show_recipes(self, recipes):
         # Complete this function
-        if 0 > recipes > len(self.recipes):
-            for recipe in recipes:
-                print()
-                print(str(recipe))
-        else:
-            raise TopChefException("Recipe index out of range")
+        for recipe in recipes:
+            print()
+            print(str(recipe))
 
     def show_reviews(self, reviews):
         # Complete this function
-        if 0 > reviews > len(self.reviews):
-            for review in reviews:
-                print()
-                print(str(review))
-        else:
-            raise TopChefException("Reviews index out of range")
+        for review in reviews:
+            print()
+            print(str(review))
 
