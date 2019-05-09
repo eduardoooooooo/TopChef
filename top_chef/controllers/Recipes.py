@@ -1,4 +1,5 @@
 # Structure to hold the recipes
+from TopChef.top_chef.controllers.InsertionSort import InsertionSort
 from TopChef.top_chef.models.Recipe import Recipe
 
 
@@ -36,18 +37,8 @@ class Recipes:
         if self.is_sorted():
             return
         else:
-            # for every element in our array
-            for index in range(1, len(self.sorted_recipes)):
-                current = self.sorted_recipes[index]
-                position = index
-
-                while position > 0 and self.sorted_recipes[position - 1].get_score() < current.get_score():
-                    self.sorted_recipes[position] = self.sorted_recipes[position - 1]
-                    position -= 1
-
-                self.sorted_recipes[position] = current
-
-            return self.sorted_recipes
+            insertion_sort = InsertionSort(self.sorted_recipes)
+            insertion_sort.sort()
 
     def get_top_n(self, n=1):
         # Complete this function

@@ -131,6 +131,11 @@ class TopChef:
         self.normalize_recipes_scores()
 
     def compute_recipe_score(self, rev_id):
+        """
+        Calcula la puntuacion de una receta sin normalizar
+        :param rev_id:
+        :return:
+        """
         review =self.reviews.get_review(rev_id)
         recipe_id = review.get_recipe_id()
         recipe = self.recipes.get_recipe(recipe_id)
@@ -161,21 +166,50 @@ class TopChef:
                 recipe.set_score(0.0)
 
 
-
-
-
-
-
-
-
     def compute_chefs_score(self):
-        # Complete this function
+        """
+        Calcula la puntuaicon de todos chef i la normaliza.
+        :return:
+        """
         for rec_id in self.recipes.get_ids():
-            continue
+            self.compute_chef_score(rec_id)
+
+        self.normalize_chefs_scores()
 
     def normalize_chefs_scores(self):
-        # Complete this function
-        pass
+        """
+        Normaliza la puntuacion de los chefs.
+        :return:
+        """
+        index_recipes = 1
+        for chef_id in self.chefs.get_ids():
+            chef = self.chefs.get_chef(chef_id)
+            number_recipes = 0
+            score = 0
+            for i in range(index_recipes, len(self.recipes.get_ids()) + 1):
+                recipe = self.recipes.get_recipe(i)
+                if chef.get_id() != recipe.get_chef_id():
+                    index_recipes = i
+                    break
+                score += recipe.get_score()
+                number_recipes += 1
+            try:
+                average = round(score / number_recipes, 1)
+                chef.set_score(average)
+            except ZeroDivisionError:
+                chef.set_score(0.0)
+
+
+    def compute_chef_score(self,rec_id):
+        """
+        Calcula la puntuacion de un chef.
+        :return:
+        """
+        recipe = self.recipes.get_recipe(rec_id)
+        chef_id = recipe.get_chef_id()
+        chef = self.chefs.get_chef(chef_id)
+        score = recipe.get_score() + chef.get_score()
+        chef.set_score(score)
 
     def sort_structures(self):
         self.chefs.sort_chefs()

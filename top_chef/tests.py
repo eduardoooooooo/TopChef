@@ -8,6 +8,7 @@ if __name__ == '__main__':
     word_dictionary.load_words("../data/words.txt")
     topchef.compute_reviews_score(word_dictionary)
     topchef.compute_recipes_score()
+    topchef.compute_chefs_score()
     print("-------------SORTED REVIEWS--------------")
     topchef.sort_structures()
     a = topchef.reviews.sorted_reviews
@@ -15,9 +16,10 @@ if __name__ == '__main__':
         print(a[i])
     print("-------------SORTED RECIPES--------------")
     a = topchef.recipes.sorted_recipes
-
-
     for i in range(len(a)):
         print(a[i])
-
+    print("-------------SORTED CHEFS----------------")
+    a = topchef.chefs.sorted_chefs
+    for i in range(len(a)):
+        print(a[i])
 

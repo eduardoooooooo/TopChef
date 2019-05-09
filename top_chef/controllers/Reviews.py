@@ -1,4 +1,5 @@
 # Structure to hold the reviews
+from TopChef.top_chef.controllers.InsertionSort import InsertionSort
 from TopChef.top_chef.models.Review import Review
 
 
@@ -61,18 +62,8 @@ class Reviews:
         if self.is_sorted():
             return
         else:
-            # for every element in our array
-            for index in range(1, len(self.sorted_reviews)):
-                current = self.sorted_reviews[index]
-                position = index
-
-                while position > 0 and self.sorted_reviews[position - 1].get_score() < current.get_score():
-                    self.sorted_reviews[position] = self.sorted_reviews[position - 1]
-                    position -= 1
-
-                self.sorted_reviews[position] = current
-
-            return self.sorted_reviews
+            insertion_sort = InsertionSort(self.sorted_recipes)
+            insertion_sort.sort()
 
     def get_top_n(self, n=1):
         # Complete this function

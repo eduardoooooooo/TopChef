@@ -1,4 +1,5 @@
 # Structure to hold all chefs
+from TopChef.top_chef.controllers.InsertionSort import InsertionSort
 from TopChef.top_chef.models.Chef import Chef
 
 
@@ -20,12 +21,12 @@ class Chefs:
         self.next += 1
         new_chef = Chef(self.next, name, restaurant)
         self.chefs[new_chef.get_id()] = new_chef
-
+        self.sorted_chefs.append(new_chef)
         return new_chef
 
     def get_chef(self, id):
         # Complete this function
-        return None
+        return self.chefs[id]
 
     def is_sorted(self):
         # Complete this function
@@ -33,7 +34,11 @@ class Chefs:
 
     def sort_chefs(self):
         # Complete this function
-        pass
+        if self.is_sorted():
+            return
+        else:
+            insertion_sort = InsertionSort(self.sorted_chefs)
+            insertion_sort.sort()
 
     def get_top_n(self, n=1):
         # Complete this function
