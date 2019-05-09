@@ -9,9 +9,10 @@ class Recipes:
         self.sorted_recipes = []
 
     def add_recipe(self, chef_id, name):
+        self.next_recipe += 1
         new_recipe = Recipe(self.next_recipe, name, chef_id)
         self.recipes[new_recipe.get_id()] = new_recipe
-        self.next_recipe += 1
+        self.sorted_recipes.append(new_recipe)
         return new_recipe
 
     def get_ids(self):
@@ -32,7 +33,21 @@ class Recipes:
 
     def sort_recipes(self):
         # Complete this function
-        pass
+        if self.is_sorted():
+            return
+        else:
+            # for every element in our array
+            for index in range(1, len(self.sorted_recipes)):
+                current = self.sorted_recipes[index]
+                position = index
+
+                while position > 0 and self.sorted_recipes[position - 1].get_score() < current.get_score():
+                    self.sorted_recipes[position] = self.sorted_recipes[position - 1]
+                    position -= 1
+
+                self.sorted_recipes[position] = current
+
+            return self.sorted_recipes
 
     def get_top_n(self, n=1):
         # Complete this function

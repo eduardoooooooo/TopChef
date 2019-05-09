@@ -17,9 +17,10 @@ class Chefs:
         return list(self.chefs.keys())
 
     def add_chef(self, name, restaurant):
+        self.next += 1
         new_chef = Chef(self.next, name, restaurant)
         self.chefs[new_chef.get_id()] = new_chef
-        self.next += 1
+
         return new_chef
 
     def get_chef(self, id):

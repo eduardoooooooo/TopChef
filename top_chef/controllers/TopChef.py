@@ -35,11 +35,11 @@ class TopChef:
             new_chef = self.add_chef(data[1],data[2].replace("\n",""))
             return new_chef
         elif data[0] == "COURSE":
-            id_last_chef = self.chefs.next - 1
+            id_last_chef = self.chefs.next
             new_recipe = self.add_recipe(id_last_chef,data[1].replace("\n",""))
             return new_recipe
         else:
-            id_last_recipe = self.recipes.next_recipe - 1
+            id_last_recipe = self.recipes.next_recipe
             new_review = self.add_review(id_last_recipe,data[0].replace("\n",""))
             return new_review
 
@@ -121,16 +121,52 @@ class TopChef:
         review.set_score(normScore)
 
     def compute_recipes_score(self):
-        # Complete this function
+        """
+        Calcula la puntuacion de las recetas y las normaliza
+        :return:
+        """
         for rev_id in self.reviews.get_ids():
-            pass
+            self.compute_recipe_score(rev_id)
+
         self.normalize_recipes_scores()
 
-
+    def compute_recipe_score(self, rev_id):
+        review =self.reviews.get_review(rev_id)
+        recipe_id = review.get_recipe_id()
+        recipe = self.recipes.get_recipe(recipe_id)
+        score = recipe.get_score() + review.get_score()
+        recipe.set_score(score)
 
     def normalize_recipes_scores(self):
-        # Complete this function
-        pass
+        """
+        Normaliza las puntuaciones de la recetas
+        :return:
+        """
+        index_review=1
+        for rec_id in self.recipes.get_ids():
+            recipe = self.recipes.get_recipe(rec_id)
+            number_reviews=0
+            score=0
+            for i in range(index_review,len(self.reviews.get_ids())+1):
+                review = self.reviews.get_review(i)
+                if recipe.get_id() != review.get_recipe_id():
+                    index_review = i
+                    break
+                score += review.get_score()
+                number_reviews += 1
+            try:
+                average= round(score/number_reviews,1)
+                recipe.set_score(average)
+            except ZeroDivisionError:
+                recipe.set_score(0.0)
+
+
+
+
+
+
+
+
 
     def compute_chefs_score(self):
         # Complete this function
@@ -169,4 +205,6 @@ class TopChef:
     def show_reviews(self, reviews):
         # Complete this function
         pass
+
+
 
