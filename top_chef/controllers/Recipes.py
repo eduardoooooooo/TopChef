@@ -22,7 +22,7 @@ class Recipes:
 
     def exists(self, id):
         # Complete this function
-        return False
+        return id in self.recipes
 
     def get_recipe(self, recipe_id):
         # Complete this function
@@ -42,7 +42,7 @@ class Recipes:
 
     def get_top_n(self, n=1):
         # Complete this function
-        return None
+        return self.sorted_recipes[:n]
 
     def __str__(self):
         # Complete this function

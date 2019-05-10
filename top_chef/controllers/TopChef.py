@@ -18,6 +18,7 @@ class TopChef:
     def load_data(self, path):
         # Complete this function
         top_chef = open(path,"r")
+
         top_chef_line = top_chef.readline().split("\t")
         while top_chef_line[0]!="":
             self.process_line(top_chef_line)
@@ -176,6 +177,17 @@ class TopChef:
 
         self.normalize_chefs_scores()
 
+    def compute_chef_score(self,rec_id):
+        """
+        Calcula la puntuacion de un chef.
+        :return:
+        """
+        recipe = self.recipes.get_recipe(rec_id)
+        chef_id = recipe.get_chef_id()
+        chef = self.chefs.get_chef(chef_id)
+        score = recipe.get_score() + chef.get_score()
+        chef.set_score(score)
+
     def normalize_chefs_scores(self):
         """
         Normaliza la puntuacion de los chefs.
@@ -199,18 +211,6 @@ class TopChef:
             except ZeroDivisionError:
                 chef.set_score(0.0)
 
-
-    def compute_chef_score(self,rec_id):
-        """
-        Calcula la puntuacion de un chef.
-        :return:
-        """
-        recipe = self.recipes.get_recipe(rec_id)
-        chef_id = recipe.get_chef_id()
-        chef = self.chefs.get_chef(chef_id)
-        score = recipe.get_score() + chef.get_score()
-        chef.set_score(score)
-
     def sort_structures(self):
         self.chefs.sort_chefs()
         self.recipes.sort_recipes()
@@ -218,27 +218,49 @@ class TopChef:
 
     def get_top_n_chefs(self, n=1):
         # Complete this function
-        return None
+        return self.chefs.get_top_n(n)
 
     def get_top_n_recipes(self, n=1):
         # Complete this function
-        return None
+        return self.recipes.get_top_n(n)
 
     def get_top_n_reviews(self, n=1):
         # Complete this function
-        return None
+        return self.reviews.get_top_n(n)
 
     def show_chefs(self, chefs):
         # Complete this function
-        pass
+        print("--------------------------------------")
+        print("------------SHOW CHEFS----------------")
+        print("--------------------------------------")
+        for chef in chefs:
+            print(chef)
+            for rec_id in self.recipes.get_ids():
+                recipe = self.recipes.get_recipe(rec_id)
+                if recipe.get_chef_id() == chef.get_id():
+                    print("  -"+str(recipe))
+                    for rev_id in self.reviews.get_ids():
+                        review = self.reviews.get_review(rev_id)
+                        if review.get_recipe_id() == rec_id:
+                            print("    -"+str(review))
+
+
 
     def show_recipes(self, recipes):
         # Complete this function
-        pass
-
+        print("--------------------------------------")
+        print("------------SHOW RECIPES----------------")
+        print("--------------------------------------")
+        for recipe in recipes:
+            print(recipe)
+            for rev_id in self.reviews.get_ids():
+                review = self.reviews.get_review(rev_id)
+                if review.get_recipe_id() == recipe.get_id():
+                    print(" -"+str(review))
     def show_reviews(self, reviews):
         # Complete this function
-        pass
+        for review in reviews:
+            print(review)
 
 
 

@@ -11,7 +11,7 @@ class Chefs:
 
     def exists(self, id):
         # Complete this function
-        return False
+        return id in self.chefs
 
     def get_ids(self):
         # Complete this function
@@ -42,7 +42,7 @@ class Chefs:
 
     def get_top_n(self, n=1):
         # Complete this function
-        return None
+        return self.sorted_chefs[:n]
 
     def __str__(self):
         # Complete this function
