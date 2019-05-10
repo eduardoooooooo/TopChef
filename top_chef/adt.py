@@ -42,8 +42,18 @@ class Chefs:
         self.sorted_chefs = []
 
     def exists(self, id):
+        """
+        Comprueba si existe el objeto con dicho id
+
+        :param id:      (Integer)   Id que se desea consultar si existe
+        :return exist:  (Boolean)   Devuelve un booleano si existe o no
+        """
         # Complete this function
-        return False
+        exist = False
+        chef_obj = self.chefs.get(id)
+        if chef_obj != None:
+            exist = True
+        return exist
 
     def get_ids(self):
         """
@@ -71,26 +81,40 @@ class Chefs:
         chef = Chef(self.next, name, restaurant)
         self.chefs[self.next] = chef
         self.sorted_chefs.append(chef)
-        return None
 
     def get_chef(self, id):
         """
         Devuelve el objeto/clase "Chef"
 
         :param id:      (Integer)   Id del chef
-        :return chef:   (Object)    Clase "Chef"
+        :return chef:   (Object)    Clase "Chef" o (Booleano) None si no existe
         """
         # Complete this function
-        chef = self.chefs.get(id)
+        if self.exists(id):
+            chef = self.chefs.get(id)
+        else:
+            raise TopChefException("No chef with this id")
+
         return chef
+
     def max_score(self):
+        """
+        Recorrer toda la lista de (List) self.sorted_chefs (ya que no esta ordenada) para encontrar el mayor score
+        
+        :return max_score:  (Float)   La mayor nota de los chefs
+        """
         max_score = self.sorted_chefs[0].get_score()
         for chef in self.sorted_chefs:
-            if chef.get_score() < max_score:
+            if chef.get_score() > max_score:
                 max_score = chef.get_score()
         return max_score
 
     def min_score(self):
+        """
+        Recorrer toda la lista de (List) self.sorted_chefs (ya que no esta ordenada) para encontrar el minimo score
+        
+        :return min_score:  (Float)   La minima nota de los chefs
+        """
         min_score = self.sorted_chefs[0].get_score()
         for chef in self.sorted_chefs:
             if chef.get_score() < min_score:
@@ -104,45 +128,47 @@ class Chefs:
         :return: (Boolean)  False si no esta ordenado y True si esta ordenado
         """
         # Complete this function
-        sort = True
         if len(self.sorted_chefs) > 1:
             for i in range(len(self.sorted_chefs)-1):
                 score_1 = self.sorted_chefs[i].score
                 score_2 = self.sorted_chefs[i+1].score
                 if score_1 < score_2:
-                    sort = False
-        return sort
+                    return False
+        return True
 
     def sort_chefs(self):
         """
-        Ordena la lista "self.sorted_chefs" de mayor a menor de los scores
+        Ordena la lista "self.sorted_chefs" de mayor a menor de los scores mediante insertion sort
 
-        :return: None
         """
         # Complete this function
-        for i in range(len(self.sorted_chefs)-1):
-            i += 1
-            j = i
-            # j para marcar el limite de la lista, que el score anterior no sea menor que el actual
-            while j > 0 and self.sorted_chefs[j].score > self.sorted_chefs[j-1].score:
-                chef_1 = self.sorted_chefs[j]
-                chef_2 = self.sorted_chefs[j-1]
-                self.sorted_chefs[j] = chef_2
-                self.sorted_chefs[j-1] = chef_1
-                j -= 1
+        if not self.is_sorted():
+            for i in range(len(self.sorted_chefs)-1):
+                i += 1
+                j = i
+                # j para marcar el limite de la lista, que el score anterior no sea menor que el actual
+                while j > 0 and self.sorted_chefs[j].score > self.sorted_chefs[j-1].score:
+                    chef_1 = self.sorted_chefs[j]
+                    chef_2 = self.sorted_chefs[j-1]
+                    self.sorted_chefs[j] = chef_2
+                    self.sorted_chefs[j-1] = chef_1
+                    j -= 1
 
     def get_top_n(self, n=1):
         """
-        Devuelve una lista con los top n que se le pasa como parametro.
+        Devuelve una lista con los top n chefs que se le pasa como parametro.
 
         :param n:           (Integer)   La cantidad de los mejores n chefs
         :return top_chefs:  (List)      Lista de los mejores n chefs
         """
         # Complete this function
-        lista = self.sorted_chefs[:n]
-        return lista
+        if 0 < n <= len(self.sorted_chefs):
+            return self.sorted_chefs[:n]
+        else:
+            raise TopChefException("Top n chefs out of range (1 - %i)" % (len(self.sorted_chefs)))
 
     def __str__(self):
+
         # Complete this function
         chefs_str = "######\tChefs\t######\n"
         for chef in self.sorted_chefs:
@@ -227,8 +253,18 @@ class Recipes:
         return ids
 
     def exists(self, id):
+        """
+        Comprueba si existe el objeto con dicho id
+
+        :param id:      (Integer)   Id que se desea consultar si existe
+        :return exist:  (Boolean)   Devuelve un booleano si existe o no
+        """
         # Complete this function
-        return False
+        exist = False
+        chef_obj = self.recipes.get(id)
+        if chef_obj != None:
+            exist = True
+        return exist
 
     def get_recipe(self, recipe_id):
         """
@@ -241,13 +277,23 @@ class Recipes:
         return self.recipes.get(recipe_id)
 
     def max_score(self):
+        """
+        Recorrer toda la lista de (List) self.sorted_recipes (ya que no esta ordenada) para encontrar el mayor score
+        
+        :return max_score:  (Float)   La mayor nota de los chefs
+        """
         max_score = self.sorted_recipes[0].get_score()
         for recipe in self.sorted_recipes:
-            if recipe.get_score() < max_score:
+            if recipe.get_score() > max_score:
                 max_score = recipe.get_score()
         return max_score
 
     def min_score(self):
+        """
+        Recorrer toda la lista de (List) self.sorted_recipes (ya que no esta ordenada) para encontrar el mayor score
+        
+        :return max_score:  (Integer)   La mayor nota de los chefs
+        """
         min_score = self.sorted_recipes[0].get_score()
         for recipe in self.sorted_recipes:
             if recipe.get_score() < min_score:
@@ -262,44 +308,45 @@ class Recipes:
         :return: (Boolean)  True si esta ordenado / False si esta desordenado
         """
         # Complete this function
-        sort = True
         if len(self.sorted_recipes) > 1:
             for i in range(len(self.sorted_recipes)-1):
                 score_1 = self.sorted_recipes[i].score
                 score_2 = self.sorted_recipes[i+1].score
                 if score_1 < score_2:
-                    sort = False
-        return sort
+                    return False
+        return True
 
     def sort_recipes(self):
         """
-        Ordena la lista "self.sorted_recipes"
+        Ordena la lista "self.sorted_recipes" mediante insertion sort
 
-        :return: None
         """
         # Complete this function
-        for i in range(len(self.sorted_recipes)-1):
-            i += 1
-            j = i
-            
-            # j para marcar el limite de la lista, y que actual < anterior
-            while j > 0 and self.sorted_recipes[j].score > self.sorted_recipes[j-1].score:
-                recipe_1 = self.sorted_recipes[j]
-                recipe_2 = self.sorted_recipes[j-1]
-                self.sorted_recipes[j] = recipe_2
-                self.sorted_recipes[j-1] = recipe_1
-                j -= 1
+        if not self.is_sorted():
+            for i in range(len(self.sorted_recipes)-1):
+                i += 1
+                j = i
+                
+                # j para marcar el limite de la lista, y que actual < anterior
+                while j > 0 and self.sorted_recipes[j].score > self.sorted_recipes[j-1].score:
+                    recipe_1 = self.sorted_recipes[j]
+                    recipe_2 = self.sorted_recipes[j-1]
+                    self.sorted_recipes[j] = recipe_2
+                    self.sorted_recipes[j-1] = recipe_1
+                    j -= 1
 
     def get_top_n(self, n=1):
         """
-        Devuelve una lista de los mejores n chefs
+        Devuelve una lista de los mejores n recipes
 
         :param n:      (Integer)    Cantidad de las mejores recetas
         :return lista: (List)       Lista de las mejores n recetas
         """
         # Complete this function
-        lista = self.sorted_recipes[:n]
-        return lista
+        if 0 < n <= len(self.sorted_recipes):
+            return self.sorted_recipes[:n]
+        else:
+            raise TopChefException("Top n Recipes index out of range (1 - %i" % (len(self.sorted_recipes)))
 
     def __str__(self):
         # Complete this function
@@ -383,12 +430,31 @@ class Reviews:
         return lista
 
     def exists(self, id):
+        """
+        Comprueba si existe el objeto con dicho id
+
+        :param id:      (Integer)   Id que se desea consultar si existe
+        :return exist:  (Boolean)   Devuelve un booleano si existe o no
+        """
         # Complete this function
-        return False
+        exist = False
+        review_obj = self.reviews.get(id)
+        if review_obj != None:
+            exist = True
+        return exist
 
     def get_review(self,rev_id):
+        """
+        Comprueba si existe el objeto con dicho id
+
+        :param id:      (Integer)   Id que se desea consultar si existe
+        :return exist:  (Boolean)   Devuelve un booleano si existe o no
+        """
         # Complete this function
-        return self.reviews.get(rev_id)
+        if self.exists(rev_id):
+            return self.reviews.get(rev_id)
+        else:
+            raise TopChefException("No review with that id")
 
     def min_score(self):
         """
@@ -436,21 +502,20 @@ class Reviews:
     def sort_reviews(self):
         """
         Ordena la lista "self.sorted_reviews" de mayor a menor de los scores de cada review.
-
-        :return: None
         """
         # Complete this function
-        for i in range(len(self.sorted_reviews)-1):
-            i += 1
-            j = i
+        if not self.is_sorted():
+            for i in range(len(self.sorted_reviews)-1):
+                i += 1
+                j = i
 
-            # mientras que j no sea 0 (si es 0 es que ha llegado al final) y que el score anterior no sea mayor no parara
-            while j > 0 and  self.sorted_reviews[j].score > self.sorted_reviews[j-1].score:
-                review_1 = self.sorted_reviews[j]
-                review_2 = self.sorted_reviews[j-1]
-                self.sorted_reviews[j] = review_2
-                self.sorted_reviews[j-1] = review_1
-                j -= 1
+                # mientras que j no sea 0 (si es 0 es que ha llegado al final) y que el score anterior no sea mayor no parara
+                while j > 0 and  self.sorted_reviews[j].score > self.sorted_reviews[j-1].score:
+                    review_1 = self.sorted_reviews[j]
+                    review_2 = self.sorted_reviews[j-1]
+                    self.sorted_reviews[j] = review_2
+                    self.sorted_reviews[j-1] = review_1
+                    j -= 1
 
     def get_top_n(self, n=1):
         """
@@ -459,8 +524,10 @@ class Reviews:
         :return lista: (List)   Mejores n reviews
         """
         # Complete this function
-        lista = self.sorted_reviews[:n]
-        return lista
+        if 0 < n <= len(self.sorted_reviews):
+            return self.sorted_reviews[:n]
+        else:
+            raise TopChefException("Top n Reviews index out of range (1 - %i" % (self.sorted_reviews))
 
     def __str__(self):
         """
@@ -475,6 +542,15 @@ class Reviews:
             rev_str += "\n"
 
         return rev_str
+
+    def __len__(self):
+        """
+        Cantidad de recetas en la clase
+
+        :return: (Integer)  Numero de recetas
+        """
+        # Complete this function
+        return len(self.sorted_reviews)
 
 
 class TopChef:
@@ -496,25 +572,30 @@ class TopChef:
         CHEF_CHAR = "CHEF"
         COURSE_CHAR = "COURSE"
         TAB = "\t"
+        NEXT_LINE = "\n"
 
         # reiniciamos la clase por si habia datos anteriores
         self.clear()
 
         with open(path) as f:
-            line = f.readline()
+            line = f.readline().replace(NEXT_LINE,"")
+            
             while line != "":
                 if (CHEF_CHAR or TAB) not in line:
                     raise TopChefException('Wrong file')
+                
                 # siempre tendra "CHEF ..." y lo convierte en una lista
                 chef_line_list = line.split(TAB)
                 try:
                     header, name, restaurant = chef_line_list
-                    self.add_chef(name, restaurant)
+                    self.add_chef(name, restaurant.replace(NEXT_LINE,""))
+                
                 except ValueError:
                     self.clear()
-                    raise TopChefException('Wrong TopChef Data File')
+                    raise TopChefException('Wrong TopChef Data File format')
+                
                 # siguiente linea
-                line = f.readline()
+                line = f.readline().replace(NEXT_LINE, "")
 
                 while (CHEF_CHAR not in line) and (COURSE_CHAR in line) and line != "":
                     # siempre empezará "COURSE ..."
@@ -522,10 +603,11 @@ class TopChef:
                     header, recipe_name = course_line_list
                     self.add_recipe(self.chefs.next, recipe_name) 
 
-                    line = f.readline()   
+                    line = f.readline().replace(NEXT_LINE,"")  
+                    
                     while (CHEF_CHAR not in line) and (COURSE_CHAR not in line) and line != "":
                         self.add_review(self.recipes.next_recipe, line)
-                        line = f.readline()
+                        line = f.readline().replace(NEXT_LINE,"")
 
     def clear(self):
         # Complete this function
@@ -544,7 +626,6 @@ class TopChef:
         """
         # Complete this function
         self.chefs.add_chef(name, rest)
-        return None
 
     def add_recipe(self, id_chef, name):
         """
@@ -600,7 +681,7 @@ class TopChef:
             for word in lista:
                 if word_dict.exists(word):
                     score += word_dict.get_value(word)
-            review_obj.set_score(score)
+            review_obj.set_score(round(score,2))
 
         self.normalize_reviews_scores()
 
@@ -610,9 +691,7 @@ class TopChef:
         """
         # Complete this function
         max_score = self.reviews.max_score()
-        print("max_score" ,max_score)
         min_score = self.reviews.min_score()
-        print("min_score", min_score)
         id_list = self.reviews.get_ids()
         for id in id_list:
             review = self.reviews.get_review(id)
@@ -625,25 +704,21 @@ class TopChef:
         Calcula la media aritmetica de las reviews que le corresponden a cada receta.
         """
         # Complete this function
-        rev_ids = self.reviews.get_ids()
-        for rec_id in self.recipes.get_ids():   #####cambio de recipes en vez de reviews
-            # clase recipe
-            recipe = self.recipes.get_recipe(rec_id)
-            counter = 0
-            # busca en todos los reviews
-            for rev_id in rev_ids:
-                review = self.reviews.get_review(rev_id)
-                # mira si coincide el id de la receta 'en' la review y de la id de la receta
-                if review.get_id() == rec_id:
-                    recipe.add_score(review.get_score())
-                    counter += 1
-
-            recipe_score = recipe.get_score()
-            # hace la media del score
+        for recipe_id in self.recipes.get_ids():
+            recipe = self.recipes.get_recipe(recipe_id)
+            num_reviews = 0
+            sum_score = 0
+            for review_id in self.reviews.get_ids():
+                review = self.reviews.get_review(review_id)
+                review_recipe_id = review.get_recipe_id()
+                if recipe_id == review_recipe_id:
+                    num_reviews += 1
+                    sum_score += review.get_score()
             try:
-                recipe.set_score(recipe_score/counter)
+                recipe.set_score(sum_score/num_reviews)
+
             except ZeroDivisionError:
-                continue
+                recipe.set_score(0)
 
         self.normalize_recipes_scores()
 
@@ -658,33 +733,27 @@ class TopChef:
         for id in id_list:
             recipe = self.recipes.get_recipe(id)
             raw_score = recipe.get_score()
-            try:
-                norm_score = (raw_score-min_score)/(max_score-min_score)
-                recipe.set_score(round(norm_score,1))
-            except ZeroDivisionError:
-                continue
+            norm_score = (raw_score-min_score)/(max_score-min_score)
+            recipe.set_score(round(norm_score,1))
 
     def compute_chefs_score(self):
         # Complete this function
-        rec_ids = self.recipes.get_ids()
-        for chef_id in self.chefs.get_ids():   #####cambio de recipes en vez de reviews
-            # clase recipe
+        for chef_id in self.chefs.get_ids():
             chef = self.chefs.get_chef(chef_id)
-            counter = 0
-            # busca en todos los reviews
-            for rec_id in rec_ids:
-                recipe = self.recipes.get_recipe(rec_id)
-                # mira si coincide el id de la receta 'en' la review y de la id de la receta
-                if recipe.get_id() == chef_id:
-                    chef.add_score(recipe.get_score())
-                    counter += 1
-
-            chef_score = chef.get_score()
-            # hace la media del score
+            num_recipes = 0
+            sum_score = 0
+            for recipe_id in self.recipes.get_ids():
+                recipe = self.recipes.get_recipe(recipe_id)
+                recipe_chef_id = recipe.get_chef_id()
+                if chef_id == recipe_chef_id:
+                    num_recipes += 1
+                    sum_score += recipe.get_score()
             try:
-                chef.set_score(chef_score/counter)
+                chef.set_score(round(sum_score/num_recipes,1))
+
             except ZeroDivisionError:
-                continue
+                chef.set_score(0)
+        self.normalize_chefs_scores()
 
     def normalize_chefs_scores(self):
         # Complete this function
@@ -693,9 +762,9 @@ class TopChef:
         id_list = self.chefs.get_ids()
         for id in id_list:
             chef = self.chefs.get_chef(id)
-            raw_score = chef.get_chef()
+            raw_score = chef.get_score()
             norm_score = (raw_score-min_score)/(max_score-min_score)
-            chef.score = norm_score
+            chef.set_score(round(norm_score,1))
 
     def sort_structures(self):
         self.chefs.sort_chefs()
@@ -704,33 +773,73 @@ class TopChef:
 
     def get_top_n_chefs(self, n=1):
         # Complete this function
-        top_chefs = self.chefs.get_top_n(n)
-        return top_chefs
+        if 0 < n <= len(self.chefs):
+            return self.chefs.get_top_n(n)
+        else:
+            raise TopChefException("Chefs index out of range (1 - %i)" % (len(self.chefs)))
+
 
     def get_top_n_recipes(self, n=1):
         # Complete this function
-        top_recipes = self.recipes.get_top_n(n)
-        return top_recipes
+        if 0 < n <= len(self.recipes):
+            return self.recipes.get_top_n(n)
+        else:
+            raise TopChefException("Recipes index out of range (1 - %i)" % (len(self.recipes)))
+
 
     def get_top_n_reviews(self, n=1):
         # Complete this function
-        top_reviews = self.reviews.get_top_n(n)
-        return top_reviews
+        if 0 < n <= len(self.reviews):
+            return self.reviews.get_top_n(n)
+        else:
+            raise TopChefException("Reviews index out of range (1 - %i)" % (len(self.reviews)))
+
 
     def show_chefs(self, chefs):
         # Complete this function
+        print("-------------------")
+        print("-------CHEFS-------")
+        print("-------------------")
+        print()
+
+        string = ""
         for chef in chefs:
-            print()
-            print(str(chef))
+            string += str(chef)
+            string += "\n"
+            for recipe in self.recipes.sorted_recipes:
+                if recipe.get_chef_id() == chef.get_id():
+                    string += "\t -%s \n" % (str(recipe))
+                    for review in self.reviews.sorted_reviews:
+                        if review.get_recipe_id() == recipe.get_id():
+                            string += "\t \t -%s \n" % (str(review))
+            string += "\n"
+        print(string)
 
     def show_recipes(self, recipes):
         # Complete this function
+        print("-------------------")
+        print("------RECIPES------")
+        print("-------------------")
+        print()
+
+        string = ""
         for recipe in recipes:
-            print()
-            print(str(recipe))
+            string += str(recipe)
+            string += "\n"
+            for review in self.reviews.sorted_reviews:
+                if review.get_recipe_id() == recipe.get_id():
+                    string += "\t -%s \n" % (str(review))
+            string += "\n"
+
+        print(string)
 
     def show_reviews(self, reviews):
         # Complete this function
+        print("-------------------")
+        print("------REVIEWS------")
+        print("-------------------")
+        print()
+
         for review in reviews:
             print()
             print(str(review))

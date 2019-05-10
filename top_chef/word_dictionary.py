@@ -16,15 +16,23 @@ class WordDictionary:
         # Complete this function
         WORD = "WORD"
         VALUE = "VALUE"
+
+        self.clean()
         
         with open(word_path,'r') as f:
             line = f.readline()
             if (WORD and VALUE) not in line:
                 raise WordDictionaryException('Wrong path')
             for line in f:
-                lista = line.split()
-                word, value = lista
-                self.add_word(word, float(value))
+                try:
+                    lista = line.split()
+                    word, value = lista
+                    self.add_word(word, float(value))
+                except ValueError:
+                    raise WordDictionaryException("Error path format")
+
+    def clean(self):
+        self.__init__()
 
     def add_word(self, word, value):
         self.words[word] = value
