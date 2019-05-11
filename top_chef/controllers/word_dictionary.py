@@ -1,3 +1,8 @@
+import os
+
+from TopChef.top_chef.Exceptions.WordDictionaryException import WordDictionaryException
+
+
 class WordDictionary:
 
     def __init__(self):
@@ -5,6 +10,8 @@ class WordDictionary:
 
     def load_words(self, word_path):
         # Complete this function
+        if os.stat(word_path).st_size == 0:
+            raise WordDictionaryException("Ningun dato ha sido cargado.El fichero: "+word_path + " está vacio.")
         word_dictionary = open(word_path,"r")
         word_dictionary.readline()
         line=word_dictionary.readline().replace("\n","").split("\t")

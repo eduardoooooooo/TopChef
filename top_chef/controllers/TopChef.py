@@ -1,3 +1,5 @@
+import os
+
 from TopChef.top_chef.Exceptions.TopChefException import TopChefException
 from TopChef.top_chef.controllers.Chefs import Chefs
 from TopChef.top_chef.controllers.FormatWordScore import FormatWordScore
@@ -18,6 +20,8 @@ class TopChef:
 
     def load_data(self, path):
         # Complete this function
+        if os.stat(path).st_size == 0:
+            raise TopChefException("Ningun dato ha sido cargado. El fichero: "+path + " está vacio.")
         top_chef = open(path,"r")
 
         top_chef_line = top_chef.readline().split("\t")

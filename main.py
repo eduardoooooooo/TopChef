@@ -35,7 +35,7 @@ def load_topchef_data(top_chef):
 
     print("select your file")
 
-    file_list = os.listdir("data/")
+    file_list = os.listdir("data/topchef")
 
     for idx, filename in enumerate(file_list):
         print("  {}. {}".format(idx + 1, filename))
@@ -47,7 +47,7 @@ def load_topchef_data(top_chef):
         if option:
             filename = file_list[option - 1]
             try:
-                top_chef.load_data(os.path.join("data", filename))
+                top_chef.load_data(os.path.join("data/topchef", filename))
 
             except Exception as ex:
                 print(ex)
@@ -64,7 +64,7 @@ def add_word_dictionary(top_chef):
 
     print("select your file")
 
-    foder_name = "data"
+    foder_name = "data/words"
     file_list = os.listdir(foder_name)
 
     for idx, filename in enumerate(file_list):
