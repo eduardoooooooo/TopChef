@@ -577,10 +577,13 @@ class TopChef:
         # reiniciamos la clase por si habia datos anteriores
         self.clear()
 
+        readed = False
         with open(path) as f:
+
             line = f.readline().replace(NEXT_LINE,"")
             
             while line != "":
+                readed = True
                 if (CHEF_CHAR or TAB) not in line:
                     raise TopChefException('Wrong file')
                 
@@ -600,14 +603,20 @@ class TopChef:
                 while (CHEF_CHAR not in line) and (COURSE_CHAR in line) and line != "":
                     # siempre empezará "COURSE ..."
                     course_line_list = line.split(TAB)
-                    header, recipe_name = course_line_list
-                    self.add_recipe(self.chefs.next, recipe_name) 
 
-                    line = f.readline().replace(NEXT_LINE,"")  
-                    
+                    try:
+                        header, recipe_name = course_line_list
+                        self.add_recipe(self.chefs.next, recipe_name) 
+                        line = f.readline().replace(NEXT_LINE,"")  
+
+                    except ValueError:
+                        raise TopChefException('Wrong TopChef Data File format')
+
                     while (CHEF_CHAR not in line) and (COURSE_CHAR not in line) and line != "":
                         self.add_review(self.recipes.next_recipe, line)
                         line = f.readline().replace(NEXT_LINE,"")
+        if not readed:
+            raise TopChefException("Empty file")
 
     def clear(self):
         # Complete this function
@@ -666,8 +675,6 @@ class TopChef:
         """
         # Complete this function
 
-        DOT = '.'
-        COMMA = ','
         NOTHING = ''
         for rev_id in self.reviews.get_ids():
             review_obj = self.reviews.get_review(rev_id)
@@ -675,13 +682,13 @@ class TopChef:
             # lo convertirmos en minúscula todo
             review = review.lower()
             # eliminamos los '.' y ','
-            review = review.replace(DOT, NOTHING).replace(COMMA, NOTHING)
+            review = review.replace(".", NOTHING).replace(",", NOTHING).replace("!",NOTHING).replace(":",NOTHING)
             lista = review.split()
             score = 0
             for word in lista:
                 if word_dict.exists(word):
                     score += word_dict.get_value(word)
-            review_obj.set_score(round(score,2))
+            review_obj.set_score(round(score,1))
 
         self.normalize_reviews_scores()
 
@@ -715,12 +722,12 @@ class TopChef:
                     num_reviews += 1
                     sum_score += review.get_score()
             try:
-                recipe.set_score(sum_score/num_reviews)
+                recipe.set_score(round(sum_score/num_reviews,1))
 
             except ZeroDivisionError:
                 recipe.set_score(0)
 
-        self.normalize_recipes_scores()
+        #self.normalize_recipes_scores()
 
     def normalize_recipes_scores(self):
         """
@@ -737,6 +744,9 @@ class TopChef:
             recipe.set_score(round(norm_score,1))
 
     def compute_chefs_score(self):
+        """
+        Calcula la media aritmetica de las recetas que le corresponden a los chefs
+        """
         # Complete this function
         for chef_id in self.chefs.get_ids():
             chef = self.chefs.get_chef(chef_id)
@@ -753,9 +763,12 @@ class TopChef:
 
             except ZeroDivisionError:
                 chef.set_score(0)
-        self.normalize_chefs_scores()
+        #self.normalize_chefs_scores()
 
     def normalize_chefs_scores(self):
+        """
+        Normaliza los chefs
+        """
         # Complete this function
         max_score = self.chefs.max_score()
         min_score = self.chefs.min_score()
@@ -772,6 +785,9 @@ class TopChef:
         self.reviews.sort_reviews()
 
     def get_top_n_chefs(self, n=1):
+        """
+        Devuelve una lista con la cantidad de chefs solicitada. TopChefException si el numero exigido es mayor o negativo
+        """
         # Complete this function
         if 0 < n <= len(self.chefs):
             return self.chefs.get_top_n(n)
@@ -780,6 +796,9 @@ class TopChef:
 
 
     def get_top_n_recipes(self, n=1):
+        """
+        Devuelve una lista con la cantidad de recetas solicitada. TopChefException si el numero exigido es mayor o negativo
+        """
         # Complete this function
         if 0 < n <= len(self.recipes):
             return self.recipes.get_top_n(n)
@@ -788,6 +807,9 @@ class TopChef:
 
 
     def get_top_n_reviews(self, n=1):
+        """
+        Devuelve una lista con la cantidad de reviews solicitada. TopChefException si el numero exigido es mayor o negativo
+        """
         # Complete this function
         if 0 < n <= len(self.reviews):
             return self.reviews.get_top_n(n)
@@ -796,10 +818,13 @@ class TopChef:
 
 
     def show_chefs(self, chefs):
+        """
+        Imprime los chefs con sus recetas correspondientes y a su vez las reviews correspondientes
+        """
         # Complete this function
-        print("-------------------")
-        print("-------CHEFS-------")
-        print("-------------------")
+        print("-----------------------------------")
+        print("---------------CHEFS---------------")
+        print("-----------------------------------")
         print()
 
         string = ""
@@ -816,10 +841,13 @@ class TopChef:
         print(string)
 
     def show_recipes(self, recipes):
+        """
+        Imprime las recetas con sus reviews correspondientes
+        """
         # Complete this function
-        print("-------------------")
-        print("------RECIPES------")
-        print("-------------------")
+        print("-----------------------------------")
+        print("--------------RECIPES--------------")
+        print("-----------------------------------")
         print()
 
         string = ""
@@ -834,10 +862,13 @@ class TopChef:
         print(string)
 
     def show_reviews(self, reviews):
+        """
+        Imprime las reviews
+        """
         # Complete this function
-        print("-------------------")
-        print("------REVIEWS------")
-        print("-------------------")
+        print("-----------------------------------")
+        print("--------------REVIEWS--------------")
+        print("-----------------------------------")
         print()
 
         for review in reviews:

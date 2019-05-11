@@ -24,6 +24,8 @@ class WordDictionary:
             if (WORD and VALUE) not in line:
                 raise WordDictionaryException('Wrong path')
             for line in f:
+                if line == "\n":
+                    raise WordDictionaryException("Empty line in the path")
                 try:
                     lista = line.split()
                     word, value = lista
