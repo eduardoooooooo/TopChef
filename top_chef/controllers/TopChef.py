@@ -20,11 +20,14 @@ class TopChef:
 
     def load_data(self, path):
         # Complete this function
+        self.clear()
         if os.stat(path).st_size == 0:
             raise TopChefException("Ningun dato ha sido cargado. El fichero: "+path + " está vacio.")
         top_chef = open(path,"r")
 
         top_chef_line = top_chef.readline().split("\t")
+        if top_chef_line[0] != "CHEF":
+            raise TopChefException("Fichero erroneo. Chef no asignado")
         while top_chef_line[0]!="":
             self.process_line(top_chef_line)
             top_chef_line = top_chef.readline().split("\t")
@@ -38,20 +41,38 @@ class TopChef:
         :return: Un objeto dependiendo de la primera palabra del array (Chef,Recipe,Review)
         """
         if data[0] == "CHEF":
-            new_chef = self.add_chef(data[1],data[2].replace("\n",""))
-            return new_chef
+            if len(data) != 2:
+                new_chef = self.add_chef(data[1],data[2].replace("\n",""))
+                return new_chef
+            else:
+                raise TopChefException("Informacion incompleta del chef.Fichero no cargado")
+
         elif data[0] == "COURSE":
-            id_last_chef = self.chefs.next
-            new_recipe = self.add_recipe(id_last_chef,data[1].replace("\n",""))
-            return new_recipe
+            if len(data) != 2:
+                raise TopChefException("Informacion incompleta de la receta.")
+            if self.chefs.next != 0:
+                id_last_chef = self.chefs.next
+                new_recipe = self.add_recipe(id_last_chef,data[1].replace("\n",""))
+                return new_recipe
+            else:
+                raise TopChefException("Fichero erroneo.Receta sin chef asignado.")
         else:
-            id_last_recipe = self.recipes.next_recipe
-            new_review = self.add_review(id_last_recipe,data[0].replace("\n",""))
+            if data[0] == "" or data[0].strip() == "":
+                raise TopChefException("Informacion incompleta del a review.Fichero no cargado")
+            if self.recipes.next_recipe != 0:
+                id_last_recipe = self.recipes.next_recipe
+                new_review = self.add_review(id_last_recipe,data[0].replace("\n",""))
+            else:
+                raise TopChefException("Fichero erroneo. Review sin receta sin asignar")
             return new_review
 
     def clear(self):
         # Complete this function
-        pass
+        """
+        Reinicia los valores
+        :return:
+        """
+        self.__init__()
 
     def add_chef(self, name, rest):
         return self.chefs.add_chef(name,rest)
@@ -223,19 +244,19 @@ class TopChef:
 
     def get_top_n_chefs(self, n=1):
         # Complete this function
-        if n > len(self.chefs.get_ids()):
+        if n > len(self.chefs.get_ids()) or n < 1:
             raise TopChefException("Numero de chefs sobrepasados.")
         return self.chefs.get_top_n(n)
 
     def get_top_n_recipes(self, n=1):
         # Complete this function
-        if n > len(self.recipes.get_ids()):
+        if n > len(self.recipes.get_ids()) or n< 1:
             raise TopChefException("Numero de recetas sobrepasados.")
         return self.recipes.get_top_n(n)
 
     def get_top_n_reviews(self, n=1):
         # Complete this function
-        if n > len(self.reviews.get_ids()):
+        if n > len(self.reviews.get_ids()) or n < 1:
             raise TopChefException("Numero de reviews sobrepasados.")
         return self.reviews.get_top_n(n)
 

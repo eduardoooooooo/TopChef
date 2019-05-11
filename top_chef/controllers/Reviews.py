@@ -1,4 +1,8 @@
 # Structure to hold the reviews
+import inspect
+import traceback
+
+from TopChef.top_chef.Exceptions.TopChefException import TopChefException
 from TopChef.top_chef.controllers.InsertionSort import InsertionSort
 from TopChef.top_chef.models.Review import Review
 
@@ -23,11 +27,16 @@ class Reviews:
 
     def exists(self, id):
         # Complete this function
-        return id in self.reviews
+        bool = id in self.reviews.keys()
+        return bool
 
     def get_review(self,rev_id):
         # Complete this function
-        return self.reviews[rev_id]
+        if self.exists(rev_id):
+            return self.reviews[rev_id]
+        else:
+            raise TopChefException("No existe la review")
+
 
     def min_score(self):
         # Complete this function

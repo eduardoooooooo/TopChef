@@ -1,4 +1,5 @@
 # Structure to hold the recipes
+from TopChef.top_chef.Exceptions.TopChefException import TopChefException
 from TopChef.top_chef.controllers.InsertionSort import InsertionSort
 from TopChef.top_chef.models.Recipe import Recipe
 
@@ -22,11 +23,14 @@ class Recipes:
 
     def exists(self, id):
         # Complete this function
-        return id in self.recipes
+        return id in self.recipes.keys()
 
     def get_recipe(self, recipe_id):
         # Complete this function
-        return self.recipes[recipe_id]
+        if self.exists(recipe_id):
+            return self.recipes[recipe_id]
+        else:
+            raise TopChefException("No existe la receta")
 
     def is_sorted(self):
         # Complete this function

@@ -1,4 +1,5 @@
 # Structure to hold all chefs
+from TopChef.top_chef.Exceptions.TopChefException import TopChefException
 from TopChef.top_chef.controllers.InsertionSort import InsertionSort
 from TopChef.top_chef.models.Chef import Chef
 
@@ -11,7 +12,7 @@ class Chefs:
 
     def exists(self, id):
         # Complete this function
-        return id in self.chefs
+        return id in self.chefs.keys()
 
     def get_ids(self):
         # Complete this function
@@ -26,7 +27,10 @@ class Chefs:
 
     def get_chef(self, id):
         # Complete this function
-        return self.chefs[id]
+        if self.exists(id):
+            return self.chefs[id]
+        else:
+            raise TopChefException("El chef no existe")
 
     def is_sorted(self):
         # Complete this function
@@ -34,11 +38,8 @@ class Chefs:
 
     def sort_chefs(self):
         # Complete this function
-        if self.is_sorted():
-            return
-        else:
-            insertion_sort = InsertionSort(self.sorted_chefs)
-            insertion_sort.sort()
+        insertion_sort = InsertionSort(self.sorted_chefs)
+        insertion_sort.sort()
 
     def get_top_n(self, n=1):
         # Complete this function

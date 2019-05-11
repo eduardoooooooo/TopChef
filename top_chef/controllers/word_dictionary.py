@@ -16,10 +16,18 @@ class WordDictionary:
         word_dictionary.readline()
         line=word_dictionary.readline().replace("\n","").split("\t")
         while len(line)>1 :
-            self.words[line[0]]=line[1]
-            line = word_dictionary.readline().replace("\n","").split("\t")
+            try:
+                self.words[line[0]]=float(line[1])
+                line = word_dictionary.readline().replace("\n","").split("\t")
+            except ValueError:
+                print("Fichero erroneo. El valor no se podido convertir a float")
 
-
+    def clear(self):
+        """
+        Reinicia  los valores
+        :return:
+        """
+        self.__init__()
     def add_word(self, word, value):
         self.words[word] = value
 

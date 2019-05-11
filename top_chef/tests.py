@@ -30,4 +30,7 @@ if __name__ == '__main__':
     topchef.show_chefs(topchef.chefs.sorted_chefs)
     topchef.show_recipes(topchef.recipes.sorted_recipes)
     """
-    topchef.show_chefs(topchef.chefs.sorted_chefs)
+    #topchef.show_chefs(topchef.chefs.sorted_chefs)
+    a="aaaa\naaaaa"
+    print(a)
+    print(a.split())
