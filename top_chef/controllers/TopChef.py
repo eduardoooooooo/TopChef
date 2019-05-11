@@ -1,3 +1,4 @@
+from TopChef.top_chef.Exceptions.TopChefException import TopChefException
 from TopChef.top_chef.controllers.Chefs import Chefs
 from TopChef.top_chef.controllers.FormatWordScore import FormatWordScore
 from TopChef.top_chef.controllers.Recipes import Recipes
@@ -218,14 +219,20 @@ class TopChef:
 
     def get_top_n_chefs(self, n=1):
         # Complete this function
+        if n > len(self.chefs.get_ids()):
+            raise TopChefException("Numero de chefs sobrepasados.")
         return self.chefs.get_top_n(n)
 
     def get_top_n_recipes(self, n=1):
         # Complete this function
+        if n > len(self.recipes.get_ids()):
+            raise TopChefException("Numero de recetas sobrepasados.")
         return self.recipes.get_top_n(n)
 
     def get_top_n_reviews(self, n=1):
         # Complete this function
+        if n > len(self.reviews.get_ids()):
+            raise TopChefException("Numero de reviews sobrepasados.")
         return self.reviews.get_top_n(n)
 
     def show_chefs(self, chefs):

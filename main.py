@@ -1,5 +1,7 @@
 import os
+import traceback
 
+from TopChef.top_chef.Exceptions.TopChefException import TopChefException
 from TopChef.top_chef.controllers.TopChef import TopChef
 
 from TopChef.top_chef.controllers.word_dictionary import WordDictionary
@@ -99,7 +101,10 @@ def show_topn_chefs(top_chef):
             try:
                 list = top_chef.get_top_n_chefs(option)
                 top_chef.show_chefs(list)
-
+            except TopChefException as top_chef_ex:
+                print(top_chef_ex)
+                option=0
+                continue
             except Exception as ex:
                 print(ex)
 
@@ -120,6 +125,11 @@ def show_topn_recipes(top_chef):
             try:
                 list = top_chef.get_top_n_recipes(option)
                 top_chef.show_recipes(list)
+
+            except TopChefException as top_chef_ex:
+                print(top_chef_ex)
+                option=0
+                continue
 
             except Exception as ex:
                 print(ex)
@@ -142,7 +152,10 @@ def show_topn_reviews(top_chef):
             try:
                 list = top_chef.get_top_n_reviews(option)
                 top_chef.show_reviews(list)
-
+            except TopChefException as top_chef_ex:
+                print(top_chef_ex)
+                option=0
+                continue
             except Exception as ex:
                 print(ex)
 
