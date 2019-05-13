@@ -19,17 +19,23 @@ class WordDictionary:
 
         self.clean()
         
+        # con el with no es necesario cerrar el fichero ya que si sale de éste se cierra directamente
         with open(word_path,'r') as f:
             line = f.readline()
+        
             if (WORD and VALUE) not in line:
                 raise WordDictionaryException('Wrong path')
+
             for line in f:
+
                 if line == "\n":
                     raise WordDictionaryException("Empty line in the path")
+
                 try:
                     lista = line.split()
                     word, value = lista
                     self.add_word(word, float(value))
+                    
                 except ValueError:
                     raise WordDictionaryException("Error path format")
 

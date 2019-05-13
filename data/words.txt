@@ -7,7 +7,6 @@ common	-0.25
 complicated	-0.6
 delicious	0.78
 easy	0.4
-
 excellent	0.7
 expensive	-0.34
 favorite	0.67

@@ -53,6 +53,7 @@ class Chefs:
         chef_obj = self.chefs.get(id)
         if chef_obj != None:
             exist = True
+
         return exist
 
     def get_ids(self):
@@ -78,18 +79,20 @@ class Chefs:
         """
         # Complete this function
         self.next += 1
+        #instanciamo y lo añadimor al diccionario y la lista
         chef = Chef(self.next, name, restaurant)
         self.chefs[self.next] = chef
         self.sorted_chefs.append(chef)
 
     def get_chef(self, id):
         """
-        Devuelve el objeto/clase "Chef"
+        Devuelve el objeto/clase "Chef". TopChefException si no existe el id
 
         :param id:      (Integer)   Id del chef
         :return chef:   (Object)    Clase "Chef" o (Booleano) None si no existe
         """
         # Complete this function
+        # si existe devolvera el valor sino devuelve None
         if self.exists(id):
             chef = self.chefs.get(id)
         else:
@@ -104,9 +107,11 @@ class Chefs:
         :return max_score:  (Float)   La mayor nota de los chefs
         """
         max_score = self.sorted_chefs[0].get_score()
+
         for chef in self.sorted_chefs:
             if chef.get_score() > max_score:
                 max_score = chef.get_score()
+
         return max_score
 
     def min_score(self):
@@ -235,10 +240,10 @@ class Recipes:
         """
         # Complete this function
         self.next_recipe += 1
+        # instancia y lo añade al diccionario y la lista
         recipe = Recipe(self.next_recipe, name, chef_id)
         self.recipes[self.next_recipe] = recipe
         self.sorted_recipes.append(recipe)
-        #return None
 
     def get_ids(self):
         """
@@ -283,9 +288,11 @@ class Recipes:
         :return max_score:  (Float)   La mayor nota de los chefs
         """
         max_score = self.sorted_recipes[0].get_score()
+
         for recipe in self.sorted_recipes:
             if recipe.get_score() > max_score:
                 max_score = recipe.get_score()
+
         return max_score
 
     def min_score(self):
@@ -295,6 +302,7 @@ class Recipes:
         :return max_score:  (Integer)   La mayor nota de los chefs
         """
         min_score = self.sorted_recipes[0].get_score()
+
         for recipe in self.sorted_recipes:
             if recipe.get_score() < min_score:
                 min_score = recipe.get_score()
@@ -303,7 +311,7 @@ class Recipes:
 
     def is_sorted(self):
         """
-        Comprueba si el atributo "self.sorted_recipes" esta ordenado
+        Comprueba si el atributo "self.sorted_recipes" esta ordenado descendentemente
 
         :return: (Boolean)  True si esta ordenado / False si esta desordenado
         """
@@ -314,11 +322,12 @@ class Recipes:
                 score_2 = self.sorted_recipes[i+1].score
                 if score_1 < score_2:
                     return False
+
         return True
 
     def sort_recipes(self):
         """
-        Ordena la lista "self.sorted_recipes" mediante insertion sort
+        Ordena la lista "self.sorted_recipes" descendentemente mediante insertion sort
 
         """
         # Complete this function
@@ -413,6 +422,7 @@ class Reviews:
         """
         # Complete this function
         self.next_review += 1
+        # instancia y añade al diccionario y la lista
         review = Review(self.next_review, review, rec_id)
         self.reviews[self.next_review] = review
         self.sorted_reviews.append(review)
@@ -441,6 +451,7 @@ class Reviews:
         review_obj = self.reviews.get(id)
         if review_obj != None:
             exist = True
+
         return exist
 
     def get_review(self,rev_id):
@@ -464,6 +475,7 @@ class Reviews:
         """
         # Complete this function
         min_score = self.sorted_reviews[0].get_score()
+
         for review in self.sorted_reviews:
             if review.get_score() < min_score:
                 min_score = review.get_score()
@@ -478,14 +490,16 @@ class Reviews:
         """
         # Complete this function
         max_score = self.sorted_reviews[0].get_score()
+
         for review in self.sorted_reviews:
             if review.get_score() > max_score:
                 max_score = review.get_score()
+
         return max_score
 
     def is_sorted(self):
         """
-        Comprueba si la lista de "self.sorted_reviews" esta ordenado
+        Comprueba si la lista de "self.sorted_reviews" esta ordenado descendentemente
 
         :return: (Boolean)  False si no esta ordenado / True si esta ordenado
         """
@@ -497,6 +511,7 @@ class Reviews:
                 score_2 = self.sorted_reviews[i+1].score
                 if score_1 > score_2:
                     sort = False
+
         return sort
 
     def sort_reviews(self):
@@ -519,7 +534,7 @@ class Reviews:
 
     def get_top_n(self, n=1):
         """
-        Lista de los mejores n reviews
+        Lista de los mejores n reviews.
 
         :return lista: (List)   Mejores n reviews
         """
@@ -577,15 +592,13 @@ class TopChef:
         # reiniciamos la clase por si habia datos anteriores
         self.clear()
 
-        readed = False
         with open(path) as f:
 
             line = f.readline().replace(NEXT_LINE,"")
             
             while line != "":
-                readed = True
                 if (CHEF_CHAR or TAB) not in line:
-                    raise TopChefException('Wrong file')
+                    raise TopChefException('Wrong file' )
                 
                 # siempre tendra "CHEF ..." y lo convierte en una lista
                 chef_line_list = line.split(TAB)
@@ -615,8 +628,6 @@ class TopChef:
                     while (CHEF_CHAR not in line) and (COURSE_CHAR not in line) and line != "":
                         self.add_review(self.recipes.next_recipe, line)
                         line = f.readline().replace(NEXT_LINE,"")
-        if not readed:
-            raise TopChefException("Empty file")
 
     def clear(self):
         # Complete this function
@@ -727,7 +738,7 @@ class TopChef:
             except ZeroDivisionError:
                 recipe.set_score(0)
 
-        #self.normalize_recipes_scores()
+        self.normalize_recipes_scores()
 
     def normalize_recipes_scores(self):
         """
@@ -763,7 +774,7 @@ class TopChef:
 
             except ZeroDivisionError:
                 chef.set_score(0)
-        #self.normalize_chefs_scores()
+        self.normalize_chefs_scores()
 
     def normalize_chefs_scores(self):
         """
@@ -827,17 +838,31 @@ class TopChef:
         print("-----------------------------------")
         print()
 
+        contador = 1
         string = ""
         for chef in chefs:
+
+            # indica el numero en el que se encuentra el chef
+            string += "=====TOP %iº CHEF=====\n" % (contador)
+            string += "\n"
+            contador += 1
+            
             string += str(chef)
             string += "\n"
-            for recipe in self.recipes.sorted_recipes:
+
+            for recipe_id in self.recipes.get_ids():
+                recipe = self.recipes.get_recipe(recipe_id)
+
                 if recipe.get_chef_id() == chef.get_id():
                     string += "\t -%s \n" % (str(recipe))
-                    for review in self.reviews.sorted_reviews:
+
+                    for review_id in self.reviews.get_ids():
+                        review = self.reviews.get_review(review_id)
+
                         if review.get_recipe_id() == recipe.get_id():
                             string += "\t \t -%s \n" % (str(review))
             string += "\n"
+
         print(string)
 
     def show_recipes(self, recipes):
@@ -850,11 +875,18 @@ class TopChef:
         print("-----------------------------------")
         print()
 
+        contador = 1
         string = ""
         for recipe in recipes:
+            string += "=====TOP %iº RECIPE=====\n" % (contador)
+            string += "\n"
+            contador += 1
+
             string += str(recipe)
             string += "\n"
-            for review in self.reviews.sorted_reviews:
+
+            for review_id in self.reviews.get_ids():
+                review = self.reviews.get_review(review_id)
                 if review.get_recipe_id() == recipe.get_id():
                     string += "\t -%s \n" % (str(review))
             string += "\n"
@@ -871,7 +903,13 @@ class TopChef:
         print("-----------------------------------")
         print()
 
+        contador = 1
+        string = ""
         for review in reviews:
-            print()
-            print(str(review))
+            string += "=====TOP %iº REVIEW=====\n" % (contador)
+            string += "\n"
+            contador += 1
+            string += str(review) + "\n"
+            string += "\n"
 
+        print(string)
